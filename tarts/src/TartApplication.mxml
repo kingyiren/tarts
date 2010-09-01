@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<local:TartsAppClass xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:local="*" showStatusBar="false"  
+					applicationComplete="onApplicationComplete(event)" styleName="tartApplication"
+					xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="com.expertria.tart.view.*">
+	<fx:Style source="style/main.css" />
+	 
+	 
+ 	<s:Group id="wrapper" bottom="25" left="0" right="0" top="0" >
+		<s:Group width="150" top="0" bottom="0">
+			<s:layout>
+				<s:VerticalLayout />
+			</s:layout>
+			<s:Group width="100%">
+				<s:layout>
+					<s:HorizontalLayout />
+				</s:layout>
+				<s:Button label="Share" click="onSelectFile(event)" />
+				 
+				<s:Button label="Open" click="onRequestFile(event)" />
+			</s:Group>
+			<s:List allowMultipleSelection="false"
+					id="tartTransferList"
+					dataProvider="{appProxy.currentTransfers}" left="0" right="0" bottom="0"  top="0"
+					 styleName="tartList"
+					height="100%" width="100%" itemRenderer="com.expertria.tart.view.renderer.TartRenderer" />	 
+		</s:Group>
+		
+		<view:TartTransferStatusView left="160" top="5" right="5" bottom="5" currentTartTransfer="{tartTransferList.selectedItem}" />
+ 	</s:Group>
+	
+	<view:ApplicationBottomBar stratusDelegate="{stratusDelegate}" />
+		
+	 
+</local:TartsAppClass>

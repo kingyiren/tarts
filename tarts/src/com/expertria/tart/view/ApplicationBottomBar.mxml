@@ -1,0 +1,27 @@
+<view:ApplicationBottomBarClass  xmlns:view="com.expertria.tart.view.*" 
+								 xmlns:fx="http://ns.adobe.com/mxml/2009" 
+								 xmlns:s="library://ns.adobe.com/flex/spark" 
+								 bottom="0" left="0" right="0" height="25" styleName="bottomBar"
+								  > 
+	 
+	<s:Group left="10" right="10" top="5" bottom="5">
+		<s:layout>
+			<s:HorizontalLayout />
+		</s:layout>
+		<s:Graphic>
+			<s:Ellipse   height="10" width="10">
+				<s:filters>
+					<s:BlurFilter blurX="5" blurY="5" />
+				</s:filters>
+				<s:fill>
+					<s:SolidColor color="{stratusDelegate.connected ?  0x00ff00 : 0x333333 }" />
+					
+				</s:fill>
+				<s:stroke>
+					<s:SolidColorStroke color="0x000000"  weight="1"  joints="round"/>
+				</s:stroke>
+			</s:Ellipse>
+		</s:Graphic>
+	</s:Group>
+	
+</view:ApplicationBottomBarClass>
