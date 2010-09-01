@@ -2,26 +2,43 @@ package com.expertria.tart.view.renderer
 {
 	import com.expertria.tart.Tart;
 	
+	import flash.events.Event;
+	
 	import spark.components.supportClasses.ItemRenderer;
 	
 	public class TartRendererClass extends ItemRenderer
 	{
+		
+		[Embed(source="assets/arrow_out.png")]
+		[Bindable]
+		public var arrow_out:Class;
+		
+		[Bindable]public var isOutgoing:Boolean = true;
+		
+		[Embed(source="assets/arrow_in.png")]
+		[Bindable]
+		public var arrow_in:Class;
 		
 		public function TartRendererClass()
 		{
 			 
 			super();
 		 
-			FileMenuDelegate.construct(this);
 			
+			 
 		}
 		
-		[Bindable("dataChange")]
-		protected function getState():String
+		
+		 
+		protected function onDataChange(e:Event):void
 		{
 			var t:Tart = data.getTart() as Tart;
 			
-			return t.getType() == Tart.HAS_FILE ? "outgoing" : "incoming";
+			isOutgoing =  ( t.getType() == Tart.HAS_FILE );
+			
+			 
+			if(t != null)
+				FileMenuDelegate.construct(this);
 		}
 		
 		

@@ -9,9 +9,13 @@ package com.expertria.tart
 		[Bindable]
 		public var connected :Boolean = false;
 		
-		private const developer_key :String = 
-			"5d2d2d9f8d6ad32eebe69f89-f147a31d0300";
-		private const rendezvous_server:String = 
+		/**
+		 * sign up for your key here:
+		 * http://labs.adobe.com/technologies/stratus/
+		 */ 
+		private const developer_key :String = "YOUR KEY HERE" ;/* REPLACE THIS WITH YOUR DEVELOPER KEY*/
+			
+		private const rendezvous_server:String =   
 			"rtmfp://stratus.rtmfp.net/";
 		
 		private   var netConnection:NetConnection  = new NetConnection(); 

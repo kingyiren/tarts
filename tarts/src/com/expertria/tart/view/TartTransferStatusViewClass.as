@@ -2,11 +2,15 @@ package com.expertria.tart.view
 {
 	import com.expertria.tart.TartTransfer;
 	
+	import flash.events.Event;
+	
 	import spark.components.BorderContainer;
 	
 	public class TartTransferStatusViewClass extends BorderContainer
 	{
 		protected var _currentTartTransfer :TartTransfer;
+		
+		
 		public function TartTransferStatusViewClass()
 		{
 			super();
@@ -16,11 +20,16 @@ package com.expertria.tart.view
 		public function set currentTartTransfer(tartTransfer:TartTransfer):void
 		{
 			this._currentTartTransfer = tartTransfer;
+			
+			 
+			
 		}
 		public function get currentTartTransfer():TartTransfer
 		{
 			return this._currentTartTransfer;
 		}
+		
+		 
 	 
 	}
 }

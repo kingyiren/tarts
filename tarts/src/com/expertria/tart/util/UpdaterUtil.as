@@ -19,6 +19,7 @@ package com.expertria.tart.util
 			appUpdater  = new ApplicationUpdaterUI(); 
 			appUpdater.configurationFile = new File("app:/assets/update-config.xml"); 
 			appUpdater.addEventListener(UpdateEvent.INITIALIZED, onUpdate);
+		 
 			appUpdater.addEventListener(StatusUpdateEvent.UPDATE_STATUS, onUpdateStatus);
 			appUpdater.addEventListener(StatusFileUpdateEvent.FILE_UPDATE_STATUS, onFileUpdateStatus);
 			appUpdater.addEventListener(UpdateEvent.DOWNLOAD_COMPLETE, onDownloadComplete);
@@ -43,8 +44,7 @@ package com.expertria.tart.util
 		}
 		private static  function onUpdateStatus(e:StatusUpdateEvent):void			
 		{
-			//do nothing
-			
+			 
 		}
 		
 		private  static  function onDownloadComplete(e:Event):void	

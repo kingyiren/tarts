@@ -23,7 +23,7 @@
 			<s:List allowMultipleSelection="false"
 					id="tartTransferList"
 					dataProvider="{appProxy.currentTransfers}" left="0" right="0" bottom="0"  top="0"
-					styleName="tartList"  add="{tartTransferList.selectedIndex = tartTransferList.numChildren - 1}"
+					styleName="tartList"    requireSelection="true"
 					height="100%" width="100%" itemRenderer="com.expertria.tart.view.renderer.TartRenderer" />	 
 		</s:Group>
 		

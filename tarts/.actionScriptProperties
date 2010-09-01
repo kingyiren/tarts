@@ -17,9 +17,7 @@
       <airExcludes/>
     </application>
     <application path="TartApplicationReceiver.mxml">
-      <airExcludes>
-        <airExclude path="TartApplication-app.xml"/>
-      </airExcludes>
+      <airExcludes/>
     </application>
   </applications>
   <modules/>

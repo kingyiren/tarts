@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <application xmlns="http://ns.adobe.com/air/application/2.0">
 
-<!-- Adobe AIR Application Descriptor File Template.
+ 
 
-	Specifies parameters for identifying, installing, and launching AIR applications.
-
-	xmlns - The Adobe AIR namespace: http://ns.adobe.com/air/application/2.0
-			The last segment of the namespace specifies the version 
-			of the AIR runtime required for this application to run.
-			
-	minimumPatchLevel - The minimum patch level of the AIR runtime required to run 
-			the application. Optional.
--->
-
-	<!-- A universally unique application identifier. Must be unique across all AIR applications.
-	     Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
+	 
 	<id>com.expertria.tartapprcv</id>
 
-	<!-- Used as the filename for the application. Required. -->
+	 
 	<filename>TartApplicationReceiver</filename>
 
-	<!-- The name that is displayed in the AIR application installer. 
-	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<name>TartApplicationReceiver</name>
+	 
+	<name>Tarts Receiver</name>
 
-	<!-- An application version designator (such as "v1", "2.5", or "Alpha 1"). Required. -->
-	<version>1.1</version>
+	 
+	<version>1</version>
 
-	<!-- Description, displayed in the AIR application installer.
-	     May have multiple values for each language. See samples or xsd schema file. Optional. -->
-	<!-- <description></description> -->
+	 <description>Receiver - P2P File Sharing with Adobe Stratus 2.0</description>
 
 	<!-- Copyright information. Optional -->
 	<!-- <copyright></copyright> -->
@@ -44,7 +30,7 @@
 		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
 		
 		<!-- The title of the main window. Optional. -->
-		<!-- <title></title> -->
+		 <title>Tarts Receiver</title>  
 
 		<!-- The type of system chrome to use (either "standard" or "none"). Optional. Default standard. -->
 		<!-- <systemChrome></systemChrome> -->
@@ -98,12 +84,12 @@
 
 	<!-- The icon the system uses for the application. For at least one resolution,
 		 specify the path to a PNG file included in the AIR package. Optional. -->
-	<!-- <icon>
-		<image16x16></image16x16>
-		<image32x32></image32x32>
-		<image48x48></image48x48>
-		<image128x128></image128x128>
-	</icon> -->
+	 <icon>
+		<image16x16>/image/tart16.png</image16x16>
+		<image32x32>/image/tart32.png</image32x32>
+		<image48x48>/image/tart48.png</image48x48>
+		<image128x128>/image/tart128.png</image128x128>
+	</icon>  
 
 	<!-- Whether the application handles the update when a user double-clicks an update version
 	of the AIR file (true), or the default AIR application installer handles the update (false).

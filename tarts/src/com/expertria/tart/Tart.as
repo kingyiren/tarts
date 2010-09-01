@@ -1,8 +1,10 @@
 package com.expertria.tart
 {
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.filesystem.File;
 
-	public class Tart
+	public class Tart extends EventDispatcher
 	{
 		 
 			
@@ -70,6 +72,8 @@ package com.expertria.tart
 		{
 			return this.partSize;
 		}
+		
+		[Bindable(event="onTypeChangeEvent")]
 		public function getType():String
 		{
 			return this.type;
@@ -107,6 +111,7 @@ package com.expertria.tart
 		public function setType(type:String):void
 		{
 			this.type = type;
+			this.dispatchEvent(new Event("onTypeChangeEvent"));
 		}
 		
 		

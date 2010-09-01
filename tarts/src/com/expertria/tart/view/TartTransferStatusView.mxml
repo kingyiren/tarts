@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <view:TartTransferStatusViewClass xmlns:fx="http://ns.adobe.com/mxml/2009" 
-								  xmlns:s="library://ns.adobe.com/flex/spark" 
+								  xmlns:s="library://ns.adobe.com/flex/spark"   
 								   currentState="{currentTartTransfer.getTart().getType() == Tart.HAS_FILE ? 'outgoing' : 'incoming' }"
 								  xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="com.expertria.tart.view.*">
 	<fx:Script>
@@ -12,18 +12,25 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	<view:layout>
-		<s:VerticalLayout />
+		<s:VerticalLayout paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" />
 	</view:layout>
-	<s:BorderContainer top="10" right="10" left="10" height="100" width="100%" />
+	
 	<s:HGroup>
 		<s:Label fontSize="10" text="Neighbours {currentTartTransfer.netGroup.neighborCount}" />
 		<s:Label fontSize="10" text="Members {currentTartTransfer.netGroup.estimatedMemberCount}" />
 		<s:Label includeIn="incoming" fontSize="10" text="File Parts {currentTartTransfer.receivedFilePartCount}/{currentTartTransfer.getTart().getTotalParts()}" />
-		<s:Label fontSize="10" text="Activity {currentTartTransfer.activity}%" />
+		 
 	</s:HGroup>
+	<s:List dataProvider="{currentTartTransfer.partList}" itemRenderer="com.expertria.tart.view.TransferDot"
+			id="canvas"  top="10" right="10" left="10" height="50" width="100%" >
+		<s:layout>
+			<s:TileLayout  horizontalGap="1" verticalGap="1" />
+		</s:layout>
+	</s:List>
 	
 	<view:states>
-		<s:State name="outgoing" />			
+		
+		<s:State name="outgoing"   />			
 		<s:State name="incoming" /> 
 	</view:states>
 </view:TartTransferStatusViewClass>

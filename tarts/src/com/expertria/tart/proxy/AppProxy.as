@@ -22,6 +22,10 @@ package com.expertria.tart.proxy
 		public function addTransfer(transfer:TartTransfer):void
 		{
 			this.currentTransfers.addItem(transfer);
+			
+			//write the transfer to the list
+			
+			//we need to retrieve this list later
 		}
 	}
 }
