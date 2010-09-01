@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<renderer:TartRendererClass xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:renderer="com.expertria.tart.view.renderer.*"		 
+				    currentState="{this.getState()}"
+				  xmlns:mx="library://ns.adobe.com/flex/mx">
+	  <s:BorderContainer height="50"   styleName="tartRenderer" left="0" right="0">
+		  
+	  
+	
+				<s:Group top="5" bottom="5" left="5" right="5">
+					<s:Label         text="{data.getTart().getName()}"  top="5" left="5"/>
+				 
+					<s:BitmapImage source.outgoing="@Embed('assets/arrow_out.png')"
+								   source.incoming="@Embed('assets/arrow_in.png')"
+								    bottom="5" left="5" />
+					<s:Label text.outgoing="Sharing..."
+							  text.incoming="Receiving..."
+							 bottom="3" left="25" />
+					
+				</s:Group>
+		  
+	  </s:BorderContainer>
+	 
+	<renderer:states>
+		<s:State name="outgoing" />			
+		<s:State name="incoming" /> 
+	</renderer:states>
+</renderer:TartRendererClass>

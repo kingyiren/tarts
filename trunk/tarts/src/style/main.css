@@ -1,0 +1,30 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace local "*";
+@namespace renderer "com.expertria.tart.view.renderer.*";
+
+.bottomBar
+{
+	 background-alpha:0;
+	 
+}
+
+.tartApplication
+{
+	background-color:#333333;
+
+	 
+}
+.tartRenderer
+{
+	background-color:#333333;
+	color:#ffffff;
+	
+}
+
+.tartList
+{
+	background-alpha:0;
+	border-alpha:0;
+}
