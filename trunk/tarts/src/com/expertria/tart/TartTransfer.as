@@ -1,5 +1,8 @@
 package com.expertria.tart
 {
+	import com.expertria.tart.event.IncomingFilePartEvent;
+	import com.expertria.tart.event.OutgoingFilePartEvent;
+	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.NetStatusEvent;
@@ -11,7 +14,11 @@ package com.expertria.tart
 	import flash.net.NetGroup;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
+	
+	import mx.collections.ArrayCollection;
 
+	[Event("IncomingFilePartEvent")]
+	[Event("OutgoingFilePartEvent")]
 	 
 	public class TartTransfer extends EventDispatcher
 	{
@@ -29,16 +36,19 @@ package com.expertria.tart
 		
 		//The number of received file part
 		private var _receivedFilePartCount:int = 0;
+	 
 		
-		private var _enableActivityTracking:Boolean = false;
-		private var _activity:Number = 0;
+		private var _partList:ArrayCollection ;
+		
+		
 		
 		
 		public function TartTransfer(tart:Tart, stratusDelegate:StratusDelegate)
 		{
 			this.tart = tart;
 			this.stratusDelegate = stratusDelegate;		
-		 	this.enableActivityTracking = true;	
+		 	 
+			this._partList = new ArrayCollection( new Array(this.tart.getTotalParts()));
 		}
 		
 		/**
@@ -151,12 +161,17 @@ package com.expertria.tart
 				
 				case "NetGroup.Replication.Request":
 					
+					
+					
 					//get the part of the file we need
 					var indexRequested :Number = e.info.index;
 					
 					//if the main FileStreamreader is running
 					if(mainFS !=null)
 					{
+						dispatchPartOutgoing(indexRequested);
+						
+						
 						//get the bytes we need to read from
 						var readFrom :uint = indexRequested * tart.getPartSize() ;
 						 
@@ -172,13 +187,7 @@ package com.expertria.tart
 						mainFS.position = readFrom; 
 						mainFS.readBytes(bytes, 0, size_slice);
 						
-						/**
-						 * Increase the activity
-						 * */
-						if(enableActivityTracking)
-						{
-							activity +=  (1 / tart.getTotalParts() 	* 100);
-						}
+					 
 						
 						/**
 						 * Write the bytes to the NetGroup
@@ -186,6 +195,8 @@ package com.expertria.tart
 						_netGroup.writeRequestedObject(e. info.requestID, bytes);
 						
 						bytes.clear();
+						
+						 
 					}
 					else
 					{
@@ -198,6 +209,9 @@ package com.expertria.tart
 						
 						if(f1.exists)
 						{
+							this._partList.setItemAt("transfering", indexRequested);
+							this.dispatchEvent(new OutgoingFilePartEvent(indexRequested));
+							
 							//TODO: check for integrity of the file 
 							
 							//Create a temp FileStream to read the file
@@ -209,18 +223,14 @@ package com.expertria.tart
 							tempFS.readBytes(tempBytes, 0, tempFS.bytesAvailable);
 							
 							
-							//Add some activity
-							if(enableActivityTracking)
-							{
-								activity +=  (1 / tart.getTotalParts() 	* 100);
-							}
+							 
 							
 							//Write the requested object to the NetGroup
 							_netGroup.writeRequestedObject(e. info.requestID, tempBytes);
 							
 							tempBytes.clear();
 							 
-							
+							 
 						}
 						else
 						{
@@ -246,11 +256,7 @@ package com.expertria.tart
 					var fileData:* = e.info.object;
 					var index:Number = e.info.index;
 					
-					//add activity
-					if(enableActivityTracking)
-					{
-						activity +=  (1 / tart.getTotalParts() 	* 100);
-					}
+					 
 					
 					/***
 					 * We do not keep the byteArray in the memory in case of large part
@@ -271,6 +277,8 @@ package com.expertria.tart
 					//broadcast that we now have this particular part
 					_netGroup.addHaveObjects(index, index);
 					_netGroup.removeWantObjects(index, index);
+					
+					dispatchPartIncoming(index);
 					
 					
 					//if we have all the parts
@@ -337,43 +345,22 @@ package com.expertria.tart
 			return this._netGroup;
 		}
 		
-		public function get enableActivityTracking():Boolean
-		{
-			return this._enableActivityTracking;
-		}
-		public function set enableActivityTracking(enable:Boolean):void
-		{
-			this._enableActivityTracking = enable;
-			if(enable)
-			{
-				startTimer();
-			}
-			else
-			{
-				endTimer();
-			}
-		}
+		 
 		
 		
 		
-		/**
-		 * Activities
-		 * **/
-		[Bindable(event="activityChange")]
-		public function get activity():Number
-		{
-			return Math.ceil(this._activity);
-		}
+		 
+		 
 		
-		public function set activity(newActivity:Number):void
-		{
-			 
-			this._activity = newActivity;
-			this._activity = Math.max(_activity, 0);
-			this._activity %= 100;
-			dispatchEvent(new Event("activityChange")); 
+		[Bindable(event="IncomingFilePartEvent")]
+		[Bindable(event="OutgoingFilePartEvent")]
+		public function get partList():ArrayCollection
 			
+		{
+			return this._partList;
 		}
+		
+		 
 		
 		/***
 		 * Received File Part
@@ -396,24 +383,18 @@ package com.expertria.tart
 			
 		}
 		
-		private var _timer:Timer;
-		private function startTimer():void
+	 
+		
+		private function dispatchPartOutgoing(index:int):void		
 		{
-			if(_timer == null) 
-			{
-				_timer =new Timer(1000);
-				_timer.addEventListener(TimerEvent.TIMER, function():void
-				{
-					activity --;	
-				}, 
-					false, 0, true);
-			}
-			_timer.start();
-			
+			this._partList.setItemAt("transfering", index);	
+			this.dispatchEvent(new OutgoingFilePartEvent(index));
 		}
-		private function endTimer():void
+		
+		private function dispatchPartIncoming(index:int):void
 		{
-			if(_timer != null) _timer.stop();
+			_partList.setItemAt("done", index);
+			this.dispatchEvent(new IncomingFilePartEvent(index));
 		}
 		
 	}

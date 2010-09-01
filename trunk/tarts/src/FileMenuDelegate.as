@@ -28,29 +28,34 @@ package
 		{
 			var menu:NativeMenu = new NativeMenu();
 			
-			var getTartFile:NativeMenuItem =  new NativeMenuItem("Generate Tart File");
-			menu.addItem(getTartFile);
-			getTartFile.addEventListener(Event.SELECT, function():void
-			{
-				var transfer:TartTransfer = tartRenderer.data as TartTransfer;
-				var tart:Tart = transfer.getTart();
-				getFacade().sendNotification(Notifications.SAVE_TART, tart);
-				
-			}, false, 0, true);
+			var transfer:TartTransfer = tartRenderer.data as TartTransfer;
+			var tart:Tart = transfer.getTart();
 			
-			menu.addItem(new NativeMenuItem("_", true));
+			if(tart.getType() == Tart.HAS_FILE)
+			{
+				var getTartFile:NativeMenuItem =  new NativeMenuItem("Generate Tart File");
+				menu.addItem(getTartFile);
+				getTartFile.addEventListener(Event.SELECT, function():void
+				{
+				
+					getFacade().sendNotification(Notifications.SAVE_TART, tart);
+				
+				}, false, 0, true);
+			
+				menu.addItem(new NativeMenuItem("_", true));
+			}
 			
 			var showInFolder:NativeMenuItem = new NativeMenuItem("Show in Folder");
 			showInFolder.addEventListener(Event.SELECT, function():void
 			{
-				var transfer:TartTransfer = tartRenderer.data as TartTransfer;
-				var tart:Tart = transfer.getTart();
+				 
 				
 				var ref:String = tart.getRef();
 				var file:File = new File(ref);
 				file.parent.openWithDefaultApplication();
 				
 			}, false, 0, true);
+			
 			menu.addItem(showInFolder);
 			/*
 			var stopSharing:NativeMenuItem =  new NativeMenuItem("Remove File");

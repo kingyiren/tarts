@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark"  visible.nil="false"  dataChange="onDataChange(event)"
+				 
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="5" height="5">
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			 
+
+			protected function onDataChange(event:FlexEvent):void
+			{
+				 
+				var data:String =   event.target.data ;
+				if(data != null)
+				{
+						currentState =  data;				 
+				}
+			}
+
+		]]>
+	</fx:Script>
+<s:Group >
+	 
+	<s:Graphic >
+		<s:Rect width="5" height="5" >
+			<s:fill>
+				<s:SolidColor color.empty="0xbbbbbb"  color.done="0x00ff00"  color.transfering="0xff0000" >
+					
+				</s:SolidColor>
+			</s:fill>
+		</s:Rect>
+	</s:Graphic>
+	
+</s:Group>
+	<s:states>
+		
+		<s:State name="empty" />
+		<s:State name="done" />
+		<s:State name="nil" />
+		<s:State name="transfering" />
+	</s:states>
+</s:ItemRenderer>

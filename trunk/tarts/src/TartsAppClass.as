@@ -86,6 +86,8 @@ package
 		protected function onApplicationComplete(e:Event):void
 		{
 			UpdaterUtil.checkUpdate(onUpdateOK);	
+			
+			onUpdateOK()
 		}
 		
 		private function onUpdateOK():void
