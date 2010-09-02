@@ -27,10 +27,14 @@ package
 	import com.expertria.tart.Tart;
 	import com.expertria.tart.TartFactory;
 	import com.expertria.tart.TartTransfer;
+	import com.expertria.tart.error.CrossOverTartError;
+	import com.expertria.tart.error.DuplicatedTartError;
+	import com.expertria.tart.event.FileDragIntoEvent;
+	import com.expertria.tart.event.Notifications;
 	import com.expertria.tart.facade.AppFacade;
 	import com.expertria.tart.proxy.AppProxy;
 	import com.expertria.tart.util.UpdaterUtil;
-	import com.expertria.tart.util.Utils;
+	 
 	import com.expertria.tart.view.AppMediator;
 	
 	import flash.display.NativeMenu;
@@ -50,6 +54,8 @@ package
 	import flash.system.fscommand;
 	import flash.utils.ByteArray;
 	
+	import mx.controls.Alert;
+	import mx.core.Window;
 	import mx.utils.object_proxy;
 	
 	import org.puremvc.as3.interfaces.IFacade;
@@ -61,22 +67,23 @@ package
 	{
 		
 		
-		[Bindable]
-		protected var stratusDelegate:StratusDelegate;
 		
 		protected var _appProxy:AppProxy;
-		 
+		private var facade:IFacade;
 		public function TartsAppClass()
 		{
 			super();
 			
-			var facade:IFacade = AppFacade.getInstance();
+			facade  = AppFacade.getInstance();
 			
 			facade.registerMediator(new AppMediator(this));
 			
 			_appProxy = facade.retrieveProxy(AppProxy.NAME) as AppProxy;
+			
+			this.dispatchEvent(new Event("onInit"));
 		}
 		
+		[Bindable(event="onInit")]
 		public function  get appProxy():AppProxy
 		{
 			return this._appProxy;
@@ -93,8 +100,7 @@ package
 		private function onUpdateOK():void
 		{
 			FileMenuDelegate.construct(this);	
-			stratusDelegate = new StratusDelegate();
-			stratusDelegate.beginConnect();
+			
 		}
 		
 	 
@@ -109,16 +115,42 @@ package
 		protected function onFileSelect(e:Event):void
 		{
 			var f:File = e.target as File;
-			var t:Tart = TartFactory.getInstance().createTartFromFile(f);
-		
-			var transfer:TartTransfer = new TartTransfer(t, this.stratusDelegate);
-			transfer.beginTransfer();
 			
-			appProxy.addTransfer(transfer);
+			attemptAddFile(f)
 			
 		}
 		
+		protected function onFileDragIntoEvent(e:FileDragIntoEvent):void
+		{
+			attemptAddFile(e.file);
+		}
 		 
+		private function attemptAddFile(file:*):void
+		{
+			try
+			{
+				if(file is File)
+					appProxy.addFile(file as File);
+				else if(file is Tart)
+					appProxy.addTart(file as Tart);
+			}
+			catch (error:DuplicatedTartError)
+			{
+				if(error.tart.getType() == Tart.HAS_FILE)
+					Alert.show("You cannot try to share 2 identical files");
+				else if(error.tart.getType() == Tart.NEED_FILE)
+					Alert.show("You cannot try to download 2 identical files");
+			}
+			catch(error:CrossOverTartError)
+			{
+				Alert.show("You cannot be sharing and downloading identical file at the same time");
+			}
+			finally
+			{
+				//nothing for now
+			}
+			
+		}
 		
 		
 		protected function onRequestFile(event:Event):void
@@ -135,10 +167,12 @@ package
 				 tart.needFile();
 				 
 				 //write the file to the app folder
-				 var transfer:TartTransfer = new TartTransfer(tart,  stratusDelegate);
-				 transfer.beginTransfer();
 				 
-				 appProxy.addTransfer(transfer);
+				 attemptAddFile(tart);
+				 
+				 fs.close();
+				 
+				 
 				 
 			 });
 			  var ff:FileFilter = new FileFilter("Tart Files" , ".tart");

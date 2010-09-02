@@ -2,6 +2,7 @@ package com.expertria.tart
 {
 	import com.expertria.tart.event.IncomingFilePartEvent;
 	import com.expertria.tart.event.OutgoingFilePartEvent;
+	import com.expertria.tart.event.TartCompleteEvent;
 	
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -17,8 +18,9 @@ package com.expertria.tart
 	
 	import mx.collections.ArrayCollection;
 
-	[Event("IncomingFilePartEvent")]
-	[Event("OutgoingFilePartEvent")]
+	[Event(name="IncomingFilePartEvent", type="com.expertria.tart.event.IncomingFilePartEvent")]
+	[Event(name="OutgoingFilePartEvent", type="com.expertria.tart.event.OutgoingFilePartEvent")]
+	[Event(name="tartComplete", type="com.expertria.tart.event.TartCompleteEvent")]
 	 
 	public class TartTransfer extends EventDispatcher
 	{
@@ -41,6 +43,11 @@ package com.expertria.tart
 		private var _partList:ArrayCollection ;
 		
 		
+		private var _messages:String =
+			//initial message
+			"<b>You can send message to all the users sharing this file.</b><p>For the list of command, type /help</p>"; 
+			//0100101000000000001111001111101001111000 
+			 
 		
 		
 		public function TartTransfer(tart:Tart, stratusDelegate:StratusDelegate)
@@ -73,16 +80,29 @@ package com.expertria.tart
 			
 			if(!this.stratusDelegate.getNetConnection().connected )
 			{
-				throw new Error("NetConnection is Not Connected");
+			 
+				stratusDelegate.addEventListener("onConnect", function(e:Event):void				
+				{
+					onConnect(groupSpec);
+				} );
+				
+			}
+			else
+			{
+				onConnect(groupSpec);	
 			}
 			
+			
+		}
+		
+		private function onConnect(groupSpec:String):void	
+		{
 			this.stratusDelegate.getNetConnection().addEventListener(NetStatusEvent.NET_STATUS, checkNetGroupConnection);
-			 
+			
 			_netGroup = new NetGroup( this.stratusDelegate.getNetConnection() , groupSpec );
 			
 			_netGroup.addEventListener(NetStatusEvent.NET_STATUS, onNetGroupEvent);
 		}
-		
 	
 			
 		protected function checkNetGroupConnection(e:NetStatusEvent):void{
@@ -156,6 +176,13 @@ package com.expertria.tart
 					break;
 				
 				case "NetGroup.Posting.Notify":
+					
+					var  postedObject:Object = e.info.message;
+					
+					if(postedObject.type == "chat")
+					{
+						appendMessage(postedObject.user, postedObject.text);
+					}
 					
 					break;
 				
@@ -326,6 +353,9 @@ package com.expertria.tart
 						
 						//Share the file :)
 						ensureFileAndShare();
+						
+						//dispatch an Event 
+						this.dispatchEvent(new TartCompleteEvent(this.tart));
 						 
 						
 					}
@@ -395,6 +425,61 @@ package com.expertria.tart
 		{
 			_partList.setItemAt("done", index);
 			this.dispatchEvent(new IncomingFilePartEvent(index));
+		}
+		
+		[Bindable(event="onMessageChangeEvent")]
+		public function get messages():String
+		{
+			return this._messages;
+		}
+		
+		public function postToGroup(userName:String, message:String):void
+		{
+			
+			
+			netGroup.post({user:userName, text:message, type:"chat"});
+			 
+			appendMessage(userName, message);
+			
+			
+			
+		}
+		
+		public function appendMessageFull(message:String):void
+		{
+			this._messages += message;
+			
+			dispatchEvent(new Event("onMessageChangeEvent"));
+		}
+		private function appendMessage(userName:String, message:String):void
+		{
+			this.appendMessageFull("<br/><b>"+userName+"</b>: " + message);
+			 
+		}
+		
+		/**
+		 * Kill any transfer that might be open
+		 * Delete all loose files
+		 * Leave the group
+		 * */
+		public function kill():void
+		{
+			//broadcast gentlely that we don't have any more thing to share :)
+			_netGroup.removeHaveObjects(0, tart.getLastPart())
+				
+			//leave the netgroup
+			_netGroup.close();
+			
+			//delete loose file
+			var dir:File = File.applicationStorageDirectory.resolvePath(tart.getId())
+			if(dir.exists)
+				dir.deleteDirectory(true);
+			
+			//kill any transfer that might be open
+			if(mainFS != null)
+				mainFS.close();
+			
+			
 		}
 		
 	}

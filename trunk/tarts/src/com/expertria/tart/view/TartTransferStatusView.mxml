@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <view:TartTransferStatusViewClass xmlns:fx="http://ns.adobe.com/mxml/2009" 
-								  xmlns:s="library://ns.adobe.com/flex/spark"   
+								  xmlns:s="library://ns.adobe.com/flex/spark" 
+								   
 								   currentState="{currentTartTransfer.getTart().getType() == Tart.HAS_FILE ? 'outgoing' : 'incoming' }"
 								  xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="com.expertria.tart.view.*">
 	<fx:Script>
 		<![CDATA[
 			import com.expertria.tart.Tart;
+			import com.expertria.tart.util.UserServices;
+			
+			import flashx.textLayout.conversion.TextConverter;
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -27,6 +31,16 @@
 			<s:TileLayout  horizontalGap="1" verticalGap="1" />
 		</s:layout>
 	</s:List>
+	 
+	<s:TextArea textFlow="{TextConverter.importToFlow(currentTartTransfer.messages, TextConverter.TEXT_FIELD_HTML_FORMAT)}"  id="fileGroupTxt" height="100%"  width="100%" left="0" right="0">
+		
+	</s:TextArea>
+	<s:HGroup verticalAlign="middle">
+		<s:Label text="{UserServices.getInstance().currentUser}"  fontWeight="bold"/>
+		<s:TextInput id="sendMessageTxt"  keyUp="{if(event.keyCode== Keyboard.ENTER) onSendMessageClickHandler(event)}"   width="100%"
+					   toolTip="Send a message to everyone sharing this file" />
+		<s:Button label="Send Message" click="onSendMessageClickHandler(event)"  />
+	</s:HGroup>
 	
 	<view:states>
 		

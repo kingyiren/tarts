@@ -32,6 +32,8 @@ package com.expertria.tart.view.renderer
 		 
 		protected function onDataChange(e:Event):void
 		{
+			if(data !=  null)
+			{
 			var t:Tart = data.getTart() as Tart;
 			
 			isOutgoing =  ( t.getType() == Tart.HAS_FILE );
@@ -39,6 +41,7 @@ package com.expertria.tart.view.renderer
 			 
 			if(t != null)
 				FileMenuDelegate.construct(this);
+			}
 		}
 		
 		

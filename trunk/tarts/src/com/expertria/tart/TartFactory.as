@@ -34,13 +34,15 @@ package com.expertria.tart
 		{
 			var xml:XML  = new XML(s);
 			
+		 
+			
 			return createTartFromXML(xml);
 			 
 		}
 		
 		public function createTartFromXML(xml:XML):Tart
 		{
-			return  new Tart(xml.name, xml.id, xml.size, xml["mime-type"], null, xml["part-size"], xml.type);
+			return  new Tart(xml.name, xml.id, xml.size, xml["mime-type"], xml.ref, xml["part-size"], xml.type);
 		}
 	}
 }

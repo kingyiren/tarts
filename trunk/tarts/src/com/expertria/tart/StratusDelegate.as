@@ -1,10 +1,12 @@
 package com.expertria.tart
 {
+	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.IOErrorEvent;
 	import flash.events.NetStatusEvent;
 	import flash.net.NetConnection;
 
-	public class StratusDelegate
+	public class StratusDelegate extends EventDispatcher
 	{
 		[Bindable]
 		public var connected :Boolean = false;
@@ -13,7 +15,7 @@ package com.expertria.tart
 		 * sign up for your key here:
 		 * http://labs.adobe.com/technologies/stratus/
 		 */ 
-		private const developer_key :String = "YOUR KEY HERE" ;/* REPLACE THIS WITH YOUR DEVELOPER KEY*/
+		private const developer_key :String = "" ;/* REPLACE THIS WITH YOUR DEVELOPER KEY*/
 			
 		private const rendezvous_server:String =   
 			"rtmfp://stratus.rtmfp.net/";
@@ -48,7 +50,8 @@ package com.expertria.tart
 			{
 				case "NetConnection.Connect.Success":
 					this.connected = true;
-					trace("CONNECTED");
+					
+					dispatchEvent(new Event("onConnect"));
 					break;
 			
 			}
