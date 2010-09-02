@@ -7,6 +7,7 @@
 	<fx:Style source="style/main.css" />
 	 
 	 
+	 
  	<s:Group id="wrapper" bottom="25" left="0" right="0" top="0" >
 		<s:Group width="150" top="0" bottom="0">
 			<s:layout>
@@ -20,18 +21,22 @@
 				 
 				<s:Button label="Open" click="onRequestFile(event)" />
 			</s:Group>
-			<s:List allowMultipleSelection="false"
-					 requireSelection="true"
-					id="tartTransferList" 
+			<s:List allowMultipleSelection="false"    
+					 requireSelection="true"  
+					id="tartTransferList"      
 					dataProvider="{appProxy.currentTransfers}" left="0" right="0" bottom="0"  top="0"
-					 styleName="tartList"
-					height="100%" width="100%" itemRenderer="com.expertria.tart.view.renderer.TartRenderer" />	 
+					 styleName="tartList"    
+					height="100%" width="100%" itemRenderer="com.expertria.tart.view.renderer.TartRenderer" >
+				   
+					
+				</s:List>
 		</s:Group>
+		<view:TartDragArea  fileDragIntoEvent="onFileDragIntoEvent(event)"  visible="{tartTransferList.selectedIndex &lt; 0 }" />
 		
-		<view:TartTransferStatusView left="160" top="5" right="5" bottom="5" currentTartTransfer="{tartTransferList.selectedItem}" />
+		<view:TartTransferStatusView visible="{tartTransferList.selectedIndex &gt; -1}" left="160" top="5" right="5" bottom="5" currentTartTransfer="{tartTransferList.selectedItem}" /> 
  	</s:Group>
 	
-	<view:ApplicationBottomBar stratusDelegate="{stratusDelegate}" />
+	<view:ApplicationBottomBar stratusDelegate="{appProxy.stratusDelegate}" />
 		
 	 
 </local:TartsAppClass>

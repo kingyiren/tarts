@@ -40,7 +40,7 @@ package
 				
 					getFacade().sendNotification(Notifications.SAVE_TART, tart);
 				
-				}, false, 0, true);
+				});
 			
 				menu.addItem(new NativeMenuItem("_", true));
 			}
@@ -52,20 +52,22 @@ package
 				
 				var ref:String = tart.getRef();
 				var file:File = new File(ref);
+				if(!file.exists) file.createDirectory();
 				file.parent.openWithDefaultApplication();
 				
-			}, false, 0, true);
+			} );
 			
 			menu.addItem(showInFolder);
-			/*
+			
+			
 			var stopSharing:NativeMenuItem =  new NativeMenuItem("Remove File");
 			stopSharing.addEventListener(Event.SELECT, function():void
 			{
-				//getFacade().sendNotification(Notifications.SAVE_TART, tart);
+				getFacade().sendNotification(Notifications.DELETE_TRANSFER, transfer);
 				
-			}, false, 0, true);
+			} );
 			 
-			menu.addItem(stopSharing);*/
+			menu.addItem(stopSharing);
 			
 			tartRenderer.contextMenu = menu;
 		}

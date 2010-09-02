@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<view:TartDragAreaClass xmlns:fx="http://ns.adobe.com/mxml/2009"  nativeDragEnter="onNativeDragEnter(event)"
+						nativeDragDrop="onNativeDropEvent(event)"
+						nativeDragComplete="onNativeDropComplete(event)"
+						xmlns:s="library://ns.adobe.com/flex/spark" 
+						borderColor="0x666666" backgroundColor="0x4c4c4c" left="160" bottom="0" top="10" right="10"
+						xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:view="com.expertria.tart.view.*">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+	</fx:Declarations>
+	 
+	
+	  <view:layout>
+		  <s:VerticalLayout paddingBottom="20" paddingLeft="20" paddingRight="20" verticalAlign="middle" horizontalAlign="center" />
+		  
+	  </view:layout>
+		 
+		
+		<s:Label  width="100%" color="0xcccccc" fontSize="40" text="Drag a file here to start sharing" />
+	
+</view:TartDragAreaClass>
