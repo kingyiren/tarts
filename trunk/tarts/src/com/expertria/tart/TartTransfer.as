@@ -13,6 +13,7 @@ package com.expertria.tart
 	import flash.filesystem.FileStream;
 	import flash.net.GroupSpecifier;
 	import flash.net.NetGroup;
+	import flash.net.NetGroupInfo;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
@@ -108,7 +109,7 @@ package com.expertria.tart
 		protected function checkNetGroupConnection(e:NetStatusEvent):void{
 			
 			var   info_code :String = e.info.code; 
-			
+			trace("Net Connection Group " +info_code + " for " + tart.getName());
 			//Ensure that it is the group we are interested in
 			if(e.info.group == this._netGroup)
 			{
@@ -122,8 +123,6 @@ package com.expertria.tart
 						}
 						else if(tart.getType() == Tart.NEED_FILE)
 						{
-							//broadcast that we need the file
-							_netGroup.addWantObjects(0, tart.getLastPart());
 							
 							//TODO:
 							/**
@@ -131,6 +130,33 @@ package com.expertria.tart
 							 * We need to ensure that if a user close and open the client
 							 * We only request those files that we need and not everything again
 							 * **/
+							var filePartDirectory:File = 
+								File.applicationStorageDirectory.resolvePath(tart.getId());
+							if(filePartDirectory.exists)
+							{
+							var files:Array =  filePartDirectory.getDirectoryListing();
+							for each(var _file:File in files)
+							{
+								if( _file.size == tart.getPartSize() && _file.extension == "osf")
+								{
+									var file_index :Number = Number( _file.name.replace("file", "").replace(".osf", ""));
+									if(! isNaN(file_index))
+									{
+										//file exist									 
+										dispatchPartIncoming(file_index);
+									}
+									 
+								}
+							}
+							}
+							
+							
+							
+							//broadcast that we need the file
+							wantObject(0, new Array());
+							
+							
+						
 						}
 			
 			
@@ -143,6 +169,40 @@ package com.expertria.tart
 			}
 		}
 		
+		private function wantObject( start:int , reach:Array ):void
+		{
+			if(start >= this.partList.length) 
+			{
+				if(reach.length > 0)
+					_netGroup.addHaveObjects(reach[0], reach[reach.length - 1])					 
+				return;
+			}
+			
+			var end :int = start;
+			for(var i:int = start ; i < this.partList.length ; i++)
+			{
+				if(partList.getItemAt(i) == "done")
+				{
+					
+					reach.push(i);
+					end = i - 1;
+					wantObject(i + 1, reach);
+					break;
+				}
+				else
+				{
+					if(reach.length > 0)
+						_netGroup.addHaveObjects(reach[0], reach[reach.length - 1]);
+					reach = new Array();
+					
+					end = i
+				}
+			}
+			if(end >= start)
+				_netGroup.addWantObjects(start, end);
+			 
+		}
+		 
 		/**
 		 * Ensure the file exist and share
 		 * */
@@ -166,12 +226,15 @@ package com.expertria.tart
 		
 		
 		protected function onNetGroupEvent(e:NetStatusEvent):void{
-			
+			trace(e.info.code + " for " + tart.getName())
 			switch(e.info.code)
 			{
+				 
 				case "NetGroup.Neighbor.Connect":
 					 
+					
 					//info.code , info.level, info.neighbor, info.peerID
+				
 					
 					break;
 				
@@ -298,8 +361,7 @@ package com.expertria.tart
 					//finished writing
 					
 					
-					//tell the transfer object we got one more file part
-					receivedFilePartCount ++ ;
+					
 				 
 					//broadcast that we now have this particular part
 					_netGroup.addHaveObjects(index, index);
@@ -368,6 +430,7 @@ package com.expertria.tart
 			}
 		}
 		
+		 
 		
 		
 		public function get netGroup():NetGroup
@@ -425,6 +488,9 @@ package com.expertria.tart
 		{
 			_partList.setItemAt("done", index);
 			this.dispatchEvent(new IncomingFilePartEvent(index));
+			
+			//tell the transfer object we got one more file part
+			receivedFilePartCount ++ ;
 		}
 		
 		[Bindable(event="onMessageChangeEvent")]
@@ -465,8 +531,12 @@ package com.expertria.tart
 		public function kill():void
 		{
 			//broadcast gentlely that we don't have any more thing to share :)
+			 
 			_netGroup.removeHaveObjects(0, tart.getLastPart())
 				
+			 
+			_netGroup.removeWantObjects(0, tart.getLastPart());
+			
 			//leave the netgroup
 			_netGroup.close();
 			

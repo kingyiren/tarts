@@ -32,7 +32,9 @@
 		</s:layout>
 	</s:List>
 	 
-	<s:TextArea textFlow="{TextConverter.importToFlow(currentTartTransfer.messages, TextConverter.TEXT_FIELD_HTML_FORMAT)}"  id="fileGroupTxt" height="100%"  width="100%" left="0" right="0">
+	<s:TextArea
+		   
+		textFlow="{TextConverter.importToFlow(currentTartTransfer.messages, TextConverter.TEXT_FIELD_HTML_FORMAT)}"  id="fileGroupTxt" height="100%"  width="100%" left="0" right="0">
 		
 	</s:TextArea>
 	<s:HGroup verticalAlign="middle">
