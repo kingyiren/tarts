@@ -4,6 +4,11 @@
 				xmlns:renderer="com.expertria.tart.view.renderer.*"	 	 
 				     dataChange="onDataChange(event)" 
 				  xmlns:mx="library://ns.adobe.com/flex/mx">
+	<fx:Script>
+		<![CDATA[
+			import com.expertria.tart.Tart;
+		]]>
+	</fx:Script>
 	  <s:BorderContainer height="50"   styleName="tartRenderer" left="0" right="0">
 		  
 	  
@@ -13,10 +18,10 @@
 				 
 					<s:BitmapImage  
 						 
-						source="{isOutgoing ? arrow_out : arrow_in}"
+						source="{data.getTart().getType() == Tart.HAS_FILE ? arrow_out : arrow_in}"
 								   
 								    bottom="5" left="5" />
-					<s:Label text="{isOutgoing ?  'Sharing...'  : 'Receiving'} "
+					<s:Label text="{data.getTart().getType() == Tart.HAS_FILE ?  'Sharing...'  : 'Receiving'} "
 							   
 							 bottom="3" left="25" />
 					

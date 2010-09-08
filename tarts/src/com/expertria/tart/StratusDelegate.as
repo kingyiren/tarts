@@ -15,7 +15,7 @@ package com.expertria.tart
 		 * sign up for your key here:
 		 * http://labs.adobe.com/technologies/stratus/
 		 */ 
-		private const developer_key :String = "" ;/* REPLACE THIS WITH YOUR DEVELOPER KEY*/
+		private const developer_key :String = "5d2d2d9f8d6ad32eebe69f89-f147a31d0300"; ;/* REPLACE THIS WITH YOUR DEVELOPER KEY*/
 			
 		private const rendezvous_server:String =   
 			"rtmfp://stratus.rtmfp.net/";

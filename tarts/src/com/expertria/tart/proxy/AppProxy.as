@@ -16,6 +16,7 @@ package com.expertria.tart.proxy
 	import flash.filesystem.FileStream;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	
 	import org.puremvc.as3.patterns.proxy.Proxy;
 	
@@ -76,6 +77,8 @@ package com.expertria.tart.proxy
 		{
 			//write the tart so that it is marked as complete
 			writeTart(e.tart);
+			
+			 
 		}
 		
 		private function writeTart(tart:Tart):void
@@ -125,7 +128,7 @@ package com.expertria.tart.proxy
 		
 		 
 		
-		public function addTart(tart:Tart):void
+		public function addTart(tart:Tart):TartTransfer
 		{
 			/**
 			 * Ensure no repeated files
@@ -158,12 +161,14 @@ package com.expertria.tart.proxy
 			_transfer.beginTransfer();
 			
 			addTransfer(_transfer);
+			
+			return _transfer;
 		}
-		public function addFile(file:File):void 
+		public function addFile(file:File):TartTransfer
 		{
 			var t:Tart = TartFactory.getInstance().createTartFromFile(file);
 			
-			addTart(t);
+			return addTart(t);
 		}
 	}
 }

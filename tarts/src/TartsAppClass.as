@@ -31,10 +31,10 @@ package
 	import com.expertria.tart.error.DuplicatedTartError;
 	import com.expertria.tart.event.FileDragIntoEvent;
 	import com.expertria.tart.event.Notifications;
+	import com.expertria.tart.event.TartCompleteEvent;
 	import com.expertria.tart.facade.AppFacade;
 	import com.expertria.tart.proxy.AppProxy;
 	import com.expertria.tart.util.UpdaterUtil;
-	 
 	import com.expertria.tart.view.AppMediator;
 	
 	import flash.display.NativeMenu;
@@ -54,6 +54,7 @@ package
 	import flash.system.fscommand;
 	import flash.utils.ByteArray;
 	
+	import mx.collections.ArrayCollection;
 	import mx.controls.Alert;
 	import mx.core.Window;
 	import mx.utils.object_proxy;
@@ -66,7 +67,9 @@ package
 	public class TartsAppClass extends WindowedApplication
 	{
 		
-		
+		/**
+		 * TODO: Resume File download!!
+		 * */
 		
 		protected var _appProxy:AppProxy;
 		private var facade:IFacade;
@@ -81,7 +84,11 @@ package
 			_appProxy = facade.retrieveProxy(AppProxy.NAME) as AppProxy;
 			
 			this.dispatchEvent(new Event("onInit"));
+			 
 		}
+		
+	
+		
 		
 		[Bindable(event="onInit")]
 		public function  get appProxy():AppProxy
@@ -127,12 +134,13 @@ package
 		 
 		private function attemptAddFile(file:*):void
 		{
+			var transfer:TartTransfer;
 			try
 			{
 				if(file is File)
-					appProxy.addFile(file as File);
+					transfer = appProxy.addFile(file as File);
 				else if(file is Tart)
-					appProxy.addTart(file as Tart);
+					transfer = appProxy.addTart(file as Tart);
 			}
 			catch (error:DuplicatedTartError)
 			{
@@ -148,8 +156,21 @@ package
 			finally
 			{
 				//nothing for now
+				
+				
 			}
 			
+			if(transfer != null) 
+			{
+				if(transfer.getTart().getType() == Tart.NEED_FILE)
+				transfer.addEventListener(TartCompleteEvent.TART_COMPLETE, onTartComplete);
+			}
+			
+		}
+		
+		protected function onTartComplete(e:TartCompleteEvent):void
+		{
+			Alert.show("File transfer " + e.tart.getName() + " is completed", "File Complete");
 		}
 		
 		

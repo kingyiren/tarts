@@ -24,7 +24,8 @@ package com.expertria.tart
 			NEED_FILE:String = "NEED_FILE" , //
 			NONE:String = "NONE" ;
 		
-		public function Tart(name:String, id:String, size:uint,   mimeType:String ,ref:String = null , partSize:uint = 2048000,  type :String =  HAS_FILE  )
+		public function Tart(name:String, id:String, size:uint,   mimeType:String ,ref:String = null ,
+							 partSize:uint = 512000,  type :String =  HAS_FILE  )
 		{
 			this.name = name;
 			this.id= id;
